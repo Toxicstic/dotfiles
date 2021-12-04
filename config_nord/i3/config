@@ -1,0 +1,257 @@
+#	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#	I3 CONFIG  I3 CONFIG  I3 CONFIG  I3 CONFIG  I3 CONFIG
+#	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+
+font pango:Mono 8
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id nm-applet
+
+
+
+
+#	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#	KEYBINDS KEYBINDS KEYBINDS KEYBINDS KEYBINDS KEYBINDS
+#	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+# --- MOD
+set $mod Mod4
+
+
+# --- DRAG WINDOW
+floating_modifier $mod
+
+
+# --- TERMINAL (ALACRITTY)
+bindsym $mod+d exec alacritty
+
+
+# --- KILL CURRENT WINDOW
+bindsym $mod+q kill
+
+
+# --- ROFI
+bindsym $mod+Return exec "rofi -modi drun,run -show drun -show-icons"
+bindsym $mod+Shift+Return exec "rofi-spotify -st"
+
+# --- FULLSCREEN
+bindsym $mod+f fullscreen toggle
+
+
+# --- MOVE FOCUS
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# -- move focus arrow keys 
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+
+# --- MOVE FOCUSSED WINDOW
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# -- move focussed window arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+
+# ---SPLIT
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+
+# --- LAYOUTS
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+
+# --- TOGGLE FLOAT
+bindsym $mod+Shift+space floating toggle
+
+
+# --- FOCUS BETWEEN FLOATING AND OTHER WINDOWS
+bindsym $mod+space focus mode_toggle
+
+
+# --- FOCUS PARENT
+bindsym $mod+a focus parent
+
+
+# --- MOVE WORKSPACE TO OTHER WINDOW
+bindsym $mod+Ctrl+Right move workspace to output right
+bindsym $mod+Ctrl+Left move workspace to output left
+
+
+# --- SWITCH TO WORKSPACE
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# --- MOVE WINDOW TO WORKSPACE
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+
+# --- RESIZE
+bindsym $mod+r mode "resize"
+mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 5 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 1 px or 1 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 1 px or 1 ppt
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+
+# --- RELOAD CONFIG
+bindsym $mod+Shift+c reload
+
+
+# --- RESTART I3
+bindsym $mod+Shift+r restart
+
+
+# --- EXIT I3 WITH PROMPT
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+
+
+
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#       WORKSPACES WORKSPACES WORKSPACES WORKSPACES WORKSPA-
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+# --- NAMES
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+
+
+
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#       GAPS GAPS GAPS GAPS GAPS GAPS GAPS GAPS GAPS GAPS G-
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+# --- REMOVE TITLE BARS OF WINDOWS
+for_window [class="^.*"] border pixel 1
+
+
+# --- GAP SETTINGS
+#gaps inner 25
+#gaps outer 25
+# -- no gaps in fullscreen
+# smart_gaps on
+
+
+
+
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#	      COLORS COLORS COLORS COLORS COLORS COLORS COLORS CO-
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+# class                 border  backgr. text    indicator
+client.focused          #81a1c1 #81a1c1 #ffffff #81a1c1
+client.unfocused        #2e3440 #2e3440 #888888 #2e3440
+client.focused_inactive #2e3440 #2e3440 #888888 #2e3440
+client.placeholder      #2e3440 #2e3440 #888888 #2e3440
+client.urgent           #900000 #900000 #ffffff #900000
+client.background       #242424
+
+
+set $base00 #101218
+set $base01 #1f222d
+set $base02 #252936
+set $base03 #5e81ac  
+set $base04 #C0C5CE
+set $base05 #d1d4e0
+set $base06 #C9CCDB
+set $base07 #ffffff
+set $base08 #ee829f
+set $base09 #f99170
+set $base0A #ffefcc
+set $base0B #a5ffe1
+set $base0C #97e0ff
+set $base0D #97bbf7
+set $base0E #c0b7f9
+set $base0F #fcc09e
+
+
+
+
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#       PROGRAMS PROGRAMS PROGRAMS PROGRAMS PROGRAMS PROGRA-
+#       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+# --- BACKGROUND
+# -- desktop background
+exec_always --no-startup-id feh --bg-fill `grep -P '^.?f' ~/.fehbg | grep "~/Pictures/walls/" | cut -d "'" -f2`
+# -- background widget
+# exec_always --no-startup-id conky
+
+# --- STATUS BAR
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+
+# --- MOUSE SETTINGS
+# -- scroll fix
+exec_always --no-startup-id imwheel
+# -- sensitivity
+# exec_always --no-startup-id xinput --set-prop "Logitech G403 Prodigy Gaming Mouse" "libinput Accel Speed" -0.9
+
+
+# --- WINDOW TRANSPARENCY
+exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+
+
+# --- SCREENSHOT
+# take a screenshot of a screen region and copy it to a clipboard
+bindsym --release Print exec "./.config/i3/screenshot.sh -s ~/Pictures/screenshots/screenshot_"
+
+# take a screenshot of a whole window and copy it to a clipboard
+bindsym --release $mod+Print exec "./.config/i3/screenshot.sh -h ~/Pictures/screenshots/screenshot_"
