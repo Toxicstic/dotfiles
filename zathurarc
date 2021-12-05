@@ -1,0 +1,14 @@
+set statusbar-fg "#ECEFF4"
+set statusbar-bg "#4C566A"
+
+set inputbar-fg "#E5E9F0"
+set inputbar-bg "#3B4252"
+
+set notification-fg "#2E3440"
+set notification-bg "#ECEFF4"
+
+set recolor-lightcolor "#2E3440"
+set recolor-keephue
+set default-bg "#2E3440"
+
+set recolor
