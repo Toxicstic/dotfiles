@@ -13,6 +13,7 @@ Ergo, **don't use it**.
 
 #### Prerequisites
 - Make sure you're computer is connected to the internet!
+- Some patience, the install script takes a long time to run.
 
 #### Installation
 TL;DR (**don't run script as sudo, it will not work**)
