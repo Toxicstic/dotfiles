@@ -16,24 +16,34 @@ Ergo, **don't use it**.
 
 ### Installation
 TL;DR (**don't run script as sudo, it will not work**)
-> sudo pacman -S git
-> git clone https://github.com/Toxicstic/dotfiles.git
-> cd dotfiles
-> sudo chmod +x install.sh
-> ./install.sh
+```
+sudo pacman -S git
+git clone https://github.com/Toxicstic/dotfiles.git
+cd dotfiles
+sudo chmod +x install.sh
+./install.sh
+```
 
 Install git:
-> sudo pacman -S git
+```
+sudo pacman -S git
+```
 
 Clone the repository:
-> git clone https://github.com/Toxicstic/dotfiles.git
-> cd dotfiles
+```
+git clone https://github.com/Toxicstic/dotfiles.git
+cd dotfiles
+```
 
 Change permissions:
-> sudo chmod +x install.sh
+```
+sudo chmod +x install.sh
+```
 
 Execute script:
-> ./install.sh
+```
+./install.sh
+```
 
 ## Details
 The script currently supports two themes (nord and gruvbox dark).
