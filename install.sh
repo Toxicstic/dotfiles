@@ -1,19 +1,18 @@
 #!/bin/bash
-
-
-
-
 # ========== ========== ========== ========== ==========
 #                     INITIALIZATION
 # ========== ========== ========== ========== ==========
 
 
+printf "──────────────────── INITIALIZATION  ────────────────────\n\n\n"
+
+
+printf "\nDeclaring aliasses\n"
+
+
 install () {
-  sudo pacman -S $@ --noconfirm 
+  sudo pacman -S $@ 
 }
-
-
-clear
 
 
 
@@ -23,14 +22,11 @@ clear
 # ========== ========== ========== ========== ==========
 
 
-: '
-printf "\n\nDEPENDENCIES"
+printf "\n\n\n──────────────────── PACKAGES AND DEPENDENCIES ────────────────────\n\n\n"
 
-# MANDATORY
 
+# --- MANDATORY
 function mandatory_dependencies () {
-
-  # drivers
   graphicscard=`lspci -v | grep -A1 -e VGA -e 3D`
   if [[ $graphicscard == *"NVIDIA"* ]]; then
     echo "nvidia detected"
@@ -39,11 +35,19 @@ function mandatory_dependencies () {
     echo "amd detected"
     install xf86-video-amdgpu mesa
   else
-    echo "ERROR: No valid GPU detected, please report!"
+    printf "\nERROR: There was not a valid GPU detected.\n Check the ouput of '$ lspci | grep -e VGA -e 3D'. \n You're a smart boi, so you can figure it out yourself.\n If you are a real homie, make a github issue report!\n"
+    exit
   fi
 
   #system
   install xorg-server xorg-apps i3-gaps polybar rofi
+
+  : '
+  cd
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si ./
+  '
 
   # desktop
   install alacritty fish mudpf zathura neovim redshift
@@ -53,14 +57,34 @@ function mandatory_dependencies () {
 
   # misc
   install exa z
-  pip install kpcli
+
+  # Display manager
+  while [ "klònkr" ];do
+
+    printf "\nDo you prefer a graphical or a console based display manager (login manager)? [G | graphical] [C | Console]\n> "
+    read result
+
+    case $result in
+      [Gg] | [Gg][Rr][Aa][Pp][Hh][Ii][Cc][Aa][Ll])
+        install sddm
+        sudo systemctl enable sddm
+        break
+        ;;
+      [Cc] | [Cc][Oo][Nn][Ss][Oo][Ll][Ee])
+        # TODO - Add --noconfirm flag
+        yay -S ly 
+        sudo systemctl enable ly.service
+        break
+        ;;
+    esac
+  done
 }
 
-# CHOICE
-function choice_dependencies () {
-  # browser
+
+# --- CHOICE
+function choice_dependencies () { 
   while [ "klònkr" ];do
-    printf "\nBrowser? [Q | qutebrowser] [F | firefox] [C | chromium] [V | vivaldi] [S | skip]\n> "
+    printf "\nBrowser? [Q | qutebrowser] [F | firefox] [C | chromium] [S | skip]\n> "
     read result 
     case $result in
       # Qutebrowser
@@ -81,12 +105,6 @@ function choice_dependencies () {
       install chromium
       break
       ;;
-      # Vivaldi
-      [Vv] | [Vv][Ii][Vv][Aa][Ll][Dd][Ii])
-      echo ""
-      install vivaldi
-      break
-      ;;
       # Skip
       [Ss] | [Ss][Kk][Ii][Pp])
       printf "\nNo Browser Installed!\n"
@@ -97,59 +115,96 @@ function choice_dependencies () {
   esac
 done
 
-# video editor
-while [ "klònkr" ];do
-  printf "\nVideo Editor? [Sh | shotcut] [K | kdenlive] [S | skip]\n> "
-  read result
+  # video editor
+  while [ "klònkr" ];do
+    printf "\nVideo Editor? [Sh | shotcut] [K | kdenlive] [S | skip]\n> "
+    read result
 
-  case $result in
-    # Shotcut
-    [Ss][Hh] | [Ss][Hh][Oo][Tt][Cc][Uu][Tt])
-    echo ""
-    install shotcut
-    break
-    ;;
-    # Kdenlive
-    [Kk] | [Kk][Dd][Ee][Nn][Ll][Ii][Vv][Ee])
-    echo ""
-    install kdenlive
-    break
-    ;;
-    # Skip
-    [Ss] | [Ss][Kk][Ii][Pp])
-    printf "\nNo Video Editor Installed!\n"
-    break
-    ;;
-  *)
-    printf "Sorry, not a valid input!\n" 
-esac
-done
-
-# gimp
-while [ "klònkr" ];do
-  printf "\nInstall GIMP? [Y/n]\n> "
-  read result 
-
-  case $result in
-    [Yy] | [Yy][Ee][Ss])
+    case $result in
+      # Shotcut
+      [Ss][Hh] | [Ss][Hh][Oo][Tt][Cc][Uu][Tt])
       echo ""
-      install gimp
+      install shotcut
       break
       ;;
-    [Nn] | [Nn][Oo])
-      printf "\nGIMP not installed!\n"
+      # Kdenlive
+      [Kk] | [Kk][Dd][Ee][Nn][Ll][Ii][Vv][Ee])
+      echo ""
+      install kdenlive
+      break
+      ;;
+      # Skip
+      [Ss] | [Ss][Kk][Ii][Pp])
+      printf "\nNo Video Editor Installed!\n"
       break
       ;;
     *)
-      printf "Sorry, not a valid input!\n"
+      printf "Sorry, not a valid input!\n" 
   esac
 done
+
+  # gimp
+  while [ "klònkr" ];do
+    printf "\nInstall GIMP? [Y/n]\n> "
+    read result 
+
+    case $result in
+      [Yy] | [Yy][Ee][Ss])
+        echo ""
+        install gimp
+        break
+        ;;
+      [Nn] | [Nn][Oo])
+        printf "\nGIMP not installed!\n"
+        break
+        ;;
+      *)
+        printf "Sorry, not a valid input!\n"
+    esac
+  done
+
+  # gimp
+  while [ "klònkr" ];do
+    printf "\nInstall CLI Based password manager (kpcli)? [Y/n]\n> "
+    read result 
+
+    case $result in
+      [Yy] | [Yy][Ee][Ss])
+        echo ""
+        pip install kpcli
+        break
+        ;;
+      [Nn] | [Nn][Oo])
+        printf "\nNot installed!\n"
+        break
+        ;;
+      *)
+        printf "Sorry, not a valid input!\n"
+    esac
+  done
+
+  # gimp
+  while [ "klònkr" ];do
+    printf "\nInstall CLI based note-taking app? [Y/n]\n> "
+    read result 
+
+    case $result in
+      [Yy] | [Yy][Ee][Ss])
+        echo ""
+        yay -S joplin --noconfirm
+        break
+        ;;
+      [Nn] | [Nn][Oo])
+        printf "\nNot installed!\n"
+        break
+        ;;
+      *)
+        printf "Sorry, not a valid input!\n"
+    esac
+  done
 }
 
-# e-mail client
-# display manager
-
-# SETUP
+# --- SETUP
 while [ "klònkr" ];do
   printf "\nDo you want a minimal install? [Y/n]\n> "
   read result
@@ -170,7 +225,6 @@ while [ "klònkr" ];do
       printf "Sorry, not a valid input!\n"
   esac
 done
-'
 
 
 
@@ -179,31 +233,39 @@ done
 #                         CONFIG 
 # ========== ========== ========== ========== ==========
 
-printf "\n\nCONFIG"
 
-# --- FISH
-: '
-# curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-fish fisher install IlanCosman/tide@v5
-'
+printf "\n\n\n──────────────────── CONFIG ────────────────────\n\n\n"
+
+
+
+# - FISH
+
+# - Install fisher and tide
+printf "\nInstalling fish shell (friendly interactive shell)...\n"
+sleep 0.3
+#curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+printf "\nInstalling fisher (fish plugin manager)...\n"
+sleep 0.3
+#fish fisher install IlanCosman/tide@v5
+printf "\nInstalling tide prompt (fish theme)...\n"
+sleep 0.3
+
+printf "\nCopying aliasses (exa = ll, etc.)...\n"
+sleep 0.3
+# Aliasses are done with copying theme folder
 
 
 # --- NEOVIM
 
-# Vim Plug
+printf "\nInstalling Vim Plug...\n"
+sleep 0.3
+# - Vim Plug
 : '
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-'
-
-#
-
-# ---
-
-
-
-
-
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  '
+  printf "\nCopying Neovim Config...\n"
+  sleep 0.3
 
 
 
@@ -213,18 +275,17 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 # ========== ========== ========== ========== ==========
 
 
-printf "\n\nTHEMING"
+printf "\n\n\n──────────────────── THEMING ────────────────────\n\n\n"
 
+
+# --- ENVIRONMENT VARIABLES
 export EDITOR=nvim
 export VISUAL=nvim
 
-: '
-cd
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si ./
-'
 
+# ---GLOBAL THEME
+printf "\nInstalling GTK theme...\n"
+sleep 0.3
 : '
 install capitaine-cursors
 yay -S la-capitaine-icon-theme --noconfirm
@@ -232,6 +293,10 @@ yay -S la-capitaine-icon-theme --noconfirm
 # Add cursor theme
 cp ./Xresources ~/.Xresources
 '
+printf "\nSetting up icon and cursor theme...\n"
+sleep 0.3
+
+# --- GLOBAL TIDE THEME
 function tide_config () {
   fish -c "set tide_character_icon '❯'"
   fish -c "set tide_character_vi_icon_default '❮'"
@@ -302,9 +367,11 @@ function tide_config () {
   fish -c "set tide_virtual_env_icon ''"
 }
 
-
+# --- NORD THEME
 function theme_nord () {
-  #cp -r ./config_nord ~/.config 
+  : '
+  cp -r ./config_nord ~/.config 
+  '
   declare -a background=(2E3440 3B4252 434C5E 4C566A)
   declare -a foreground=(D8DEE9 E5E9F0 ECEFF4)
   declare -a secondary=(8FBCBB 88C0D0 81A1C1 5E81AC)
@@ -343,7 +410,7 @@ function theme_nord () {
     # TIDE FISH PROMPT COLORS
     fish -c "set tide_character_color $(echo ${accent[3]})"
     fish -c "set tide_character_color_failure $(echo ${accent[0]})"
-    fish -c "set tide_cmd_duration_color $(echo ${secondary[3]})"
+    fish -c "set tide_cmd_duration_color $(echo ${accent[1]})"
     fish -c "set tide_cmd_duration_decimals 2"
     fish -c "set tide_context_always_display true"
     fish -c "set tide_context_color_ssh $(echo ${secondary[2]})"
@@ -362,20 +429,17 @@ function theme_nord () {
     fish -c "set tide_git_color_untracked $(echo ${accent[1]})"
     fish -c "set tide_git_color_staged $(echo ${secondary[2]})" 
   }
-  theme_nord_fish
+theme_nord_fish
 }
 
+# --- GRUVBOX THEME
 function theme_gruvbox () {
-  :
-}
-
-function theme_tokyo () {
   :
 }
 
 
 while [ "klònkr" ];do
-  printf "\nWhat is your favorite color scheme? [N | nord] [G | gruvbox] [T | tokyonight] [S | skip]?\n"
+  printf "\nWhat is your favorite color scheme? [N | nord] [G | gruvbox] [S | skip]?\n"
   show_colour() {
     perl -e '
     foreach $a(@ARGV)
@@ -388,8 +452,8 @@ while [ "klònkr" ];do
 printf "\nNord:        "
 show_colour "2E3440" "3B4252" "434C5E" "4C566A" "D8DEE9" "E5E9F0" "ECEFF4" "88C0D0" "81A1C1" "5E81AC" "BF616A" "D08770" "EBCB8B" "A3BE8C" "B48EAD"
 
-printf "\nTokyo Night: " 
-show_colour "f7768e" "ff9e64" "e0af68" "9ece6a" "73daca" "b4f9f8" "2ac3de" "7dcfff" "7aa2f7" "bb9af7" "c0caf5" "a9b1d6" "9aa5ce" "cfc9c2" "565f89" "414868" "24283b" "1a1b26"                                                             
+#printf "\nTokyo Night: " 
+#show_colour "f7768e" "ff9e64" "e0af68" "9ece6a" "73daca" "b4f9f8" "2ac3de" "7dcfff" "7aa2f7" "bb9af7" "c0caf5" "a9b1d6" "9aa5ce" "cfc9c2" "565f89" "414868" "24283b" "1a1b26"                                                             
 
 printf "\nGruvbox:     "
 show_colour "1D2021" "32302F" "3C3836" "504945" "665C54" "7C6F64" "FBF1C7" "EBDBB2" "D5C4A1" "BDAE93" "BDAE93" "928374" "FB4934" "B8BB26" "FABD2F" "83A598" "D3869B" "8EC07C" "FE8019" "EBDBB2"
@@ -406,10 +470,10 @@ case $result in
     theme_gruvbox
     break
     ;;
-  [Tt] | [Tt][Oo][Kk][Yy][Oo][Nn][Ii][Gg][Hh][Tt])
-    theme_tokyo
-    break
-    ;;
+  #[Tt] | [Tt][Oo][Kk][Yy][Oo][Nn][Ii][Gg][Hh][Tt])
+    #  theme_tokyo
+    #  break
+    #  ;;
   [Ss] | [Ss][Kk][Ii][Pp])
     echo "No Theming!"
     break
