@@ -1,20 +1,28 @@
 #!/bin/bash
 
+
+
+
 # ========== ========== ========== ========== ==========
 #                     INITIALIZATION
 # ========== ========== ========== ========== ==========
 
+
 install () {
-  sudo pacman -S $@ 
+  sudo pacman -S $@ --noconfirm 
 }
+
 
 clear
 
-# check if ran as sudo
+
+
 
 # ========== ========== ========== ========== ==========
 #                PACKAGES AND DEPENDENCIES
 # ========== ========== ========== ========== ==========
+
+
 : '
 printf "\n\nDEPENDENCIES"
 
@@ -163,25 +171,53 @@ while [ "klònkr" ];do
   esac
 done
 '
+
+
+
+
 # ========== ========== ========== ========== ==========
 #                         CONFIG 
 # ========== ========== ========== ========== ==========
 
 printf "\n\nCONFIG"
 
-
+# --- FISH
+: '
 # curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-fisher install IlanCosman/tide@v5
-fish set
+fish fisher install IlanCosman/tide@v5
+'
+
+
+# --- NEOVIM
+
+# Vim Plug
+: '
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+'
+
+#
+
+# ---
+
+
+
+
+
+
+
+
 
 # ========== ========== ========== ========== ==========
 #                        THEMING 
 # ========== ========== ========== ========== ==========
 
+
 printf "\n\nTHEMING"
 
 export EDITOR=nvim
 export VISUAL=nvim
+
 : '
 cd
 git clone https://aur.archlinux.org/yay.git
@@ -189,6 +225,13 @@ cd yay
 makepkg -si ./
 '
 
+: '
+install capitaine-cursors
+yay -S la-capitaine-icon-theme --noconfirm
+
+# Add cursor theme
+cp ./Xresources ~/.Xresources
+'
 function tide_config () {
   fish -c "set tide_character_icon '❯'"
   fish -c "set tide_character_vi_icon_default '❮'"
@@ -229,23 +272,14 @@ function tide_config () {
   fish -c "set tide_php_color 617CBE"
   fish -c "set tide_php_icon ''"
   fish -c "set tide_prompt_add_newline_before true"
-  fish -c "set tide_prompt_color_frame_and_connection 6C6C6C"
-  fish -c "set tide_prompt_color_separator_same_color 949494"
   fish -c "set tide_prompt_icon_connection ' '"
   fish -c "set tide_prompt_min_cols 26"
   fish -c "set tide_prompt_pad_items false" 
-  fish -c "set tide_pwd_color_anchors $_tide_color_light_blue"
-  fish -c "set tide_pwd_color_dirs $_tide_color_dark_blue"
-  fish -c "set tide_pwd_color_truncated_dirs 8787AF"
-  fish -c "set tide_pwd_icon"
-  fish -c "set tide_pwd_icon_home"
   fish -c "set tide_pwd_icon_unwritable ''"
   fish -c "set tide_pwd_markers .bzr .citc .git .hg .node-version .python-version .ruby-version .shorten_folder_marker .svn .terraform Cargo.toml composer.json CVS go.mod package.json"
   fish -c "set tide_right_prompt_frame_enabled false"
   fish -c "set tide_right_prompt_items status cmd_duration context jobs node virtual_env rustc php chruby go time"
   fish -c "set tide_right_prompt_prefix ' '"
-  fish -c "set tide_right_prompt_separator_diff_color ' '"
-  fish -c "set tide_right_prompt_separator_same_color ' '"
   fish -c "set tide_right_prompt_suffix ''"
   fish -c "set tide_rustc_color F74C00"
   fish -c "set tide_rustc_icon ''"
@@ -270,53 +304,65 @@ function tide_config () {
 
 
 function theme_nord () {
-  # GTK 2 and 3 theme
-  # yay -S nordic-polar-theme --noconfirm
-  
-  # FISH COLOR SETTINGS
-  fish -c "set -U fish_color_normal normal"
-  fish -c "set -U fish_color_command 81a1c1"
-  fish -c "set -U fish_color_quote a3be8c"
-  fish -c "set -U fish_color_redirection b48ead"
-  fish -c "set -U fish_color_end 88c0d0"
-  fish -c "set -U fish_color_error ebcb8b"
-  fish -c "set -U fish_color_param eceff4"
-  fish -c "set -U fish_color_comment 434c5e"
-  fish -c "set -U fish_color_match --background=brblue"
-  fish -c "set -U fish_color_selection white --bold --background=brblack"
-  fish -c "set -U fish_color_search_match bryellow --background=brblack"
-  fish -c "set -U fish_color_history_current --bold"
-  fish -c "set -U fish_color_operator 00a6b2"
-  fish -c "set -U fish_color_escape 00a6b2"
-  fish -c "set -U fish_color_cwd green"
-  fish -c "set -U fish_color_cwd_root red"
-  fish -c "set -U fish_color_valid_path --underline"
-  fish -c "set -U fish_color_autosuggestion 4c566a"
-  fish -c "set -U fish_color_user brgreen"
-  fish -c "set -U fish_color_host normal"
-  fish -c "set -U fish_color_cancel -r"
-  fish -c "set -U fish_pager_color_completion normal"
-  fish -c "set -U fish_pager_color_description B3A06D yellow"
-  fish -c "set -U fish_pager_color_prefix normal --bold --underline"
-  fish -c "set -U fish_pager_color_progress brwhite --background=cyan"
+  #cp -r ./config_nord ~/.config 
+  declare -a background=(2E3440 3B4252 434C5E 4C566A)
+  declare -a foreground=(D8DEE9 E5E9F0 ECEFF4)
+  declare -a secondary=(8FBCBB 88C0D0 81A1C1 5E81AC)
+  declare -a accent=(BF616A D08770 EBCB8B A3BE8C B48EAD)
 
-  # TIDE FISH PROMPT COLORS
-  fish -c "set tide_character_color A3BE8C"
-  fish -c "set tide_character_color_failure BF616A"
-  fish -c "set tide_cmd_duration_color"
-  fish -c "set tide_cmd_duration_decimals 2"
-  fish -c "set tide_context_always_display true"
-  fish -c "set tide_context_color_ssh 81A1C181A1C1"
-  fish -c "set tide_context_color_root 81A1C1"
-  fish -c "set tide_context_color_default 81A1C1"
-  fish -c "set tide_pwd_color_dirs 81A1C1"
-  fish -c "set tide_pwd_color_truncated_dirs 88C0D0"
-  fish -c "set tide_pwd_color_anchors 88C0D0"
-  fish -c "set tide_status_color A3BE8C"
-  fish -c "set tide_status_color_failure BF616A"
-  fish -c "set tide_time_color EBCB8B"
-  fish -c "set tide_prompt_icon_color_frame_and_connection 434C5E"
-  fish -c "set tide_prompt_icon_connection ─"
+  # --- GTK
+  #yay -S nordic-polar-theme --noconfirm
+
+  function theme_nord_fish () {
+    # FISH COLOR SETTINGS
+    fish -c "set -U fish_color_normal normal"
+    fish -c "set -U fish_color_command $(echo ${secondary[2]})"
+    fish -c "set -U fish_color_quote $(echo ${accent[3]})"
+    fish -c "set -U fish_color_redirection $(echo ${accent[4]})"
+    fish -c "set -U fish_color_end $(echo ${secondary[1]})"
+    fish -c "set -U fish_color_error $(echo ${accent[2]})"
+    fish -c "set -U fish_color_param $(echo ${foreground[2]})"
+    fish -c "set -U fish_color_comment $(echo ${background[2]})"
+    fish -c "set -U fish_color_match --background=brblue"
+    fish -c "set -U fish_color_selection white --bold --background=brblack"
+    fish -c "set -U fish_color_search_match bryellow --background=brblack"
+    fish -c "set -U fish_color_history_current --bold"
+    fish -c "set -U fish_color_operator 00a6b2"
+    fish -c "set -U fish_color_escape 00a6b2"
+    fish -c "set -U fish_color_cwd green"
+    fish -c "set -U fish_color_cwd_root red"
+    fish -c "set -U fish_color_valid_path --underline"
+    fish -c "set -U fish_color_autosuggestion $(echo ${background[3]})"
+    fish -c "set -U fish_color_user brgreen"
+    fish -c "set -U fish_color_host normal"
+    fish -c "set -U fish_color_cancel -r"
+    fish -c "set -U fish_pager_color_completion normal"
+    fish -c "set -U fish_pager_color_description $(echo ${accent[2]}) yellow"
+    fish -c "set -U fish_pager_color_prefix normal --bold --underline"
+    fish -c "set -U fish_pager_color_progress brwhite --background=cyan"
+    # TIDE FISH PROMPT COLORS
+    fish -c "set tide_character_color $(echo ${accent[3]})"
+    fish -c "set tide_character_color_failure $(echo ${accent[0]})"
+    fish -c "set tide_cmd_duration_color $(echo ${secondary[3]})"
+    fish -c "set tide_cmd_duration_decimals 2"
+    fish -c "set tide_context_always_display true"
+    fish -c "set tide_context_color_ssh $(echo ${secondary[2]})"
+    fish -c "set tide_context_color_root $(echo ${secondary[2]})"
+    fish -c "set tide_context_color_default $(echo ${secondary[2]})"
+    fish -c "set tide_pwd_color_dirs $(echo ${secondary[2]})"
+    fish -c "set tide_pwd_color_truncated_dirs $(echo ${secondary[1]})"
+    fish -c "set tide_pwd_color_anchors $(echo ${secondary[1]})"
+    fish -c "set tide_status_color $(echo ${accent[3]})"
+    fish -c "set tide_status_color_failure $(echo ${accents[0]})"
+    fish -c "set tide_time_color $(echo ${accent[2]})"
+    fish -c "set tide_prompt_icon_color_frame_and_connection $(echo ${background[2]})"
+    fish -c "set tide_prompt_icon_connection ─"
+    fish -c "set tide_git_color_branch $(echo ${accent[4]})"
+    fish -c "set tide_git_color_dirty $(echo ${accent[1]})"
+    fish -c "set tide_git_color_untracked $(echo ${accent[1]})"
+    fish -c "set tide_git_color_staged $(echo ${secondary[2]})" 
+  }
+  theme_nord_fish
 }
 
 function theme_gruvbox () {
