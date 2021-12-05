@@ -1,6 +1,6 @@
-# Dotfiles + Setup script
+## Dotfiles + Setup script
 
-## Disclaimer
+### Disclaimer
 Still in development.
 
 **THIS WILL BREAK YOUR COMPUTER!**
@@ -9,12 +9,12 @@ Still in development.
 
 Ergo, **don't use it**.
 
-## Installation from clean Arch install
+### Installation from clean Arch install
 
-### Prerequisites
+#### Prerequisites
 - Make sure you're computer is connected to the internet!
 
-### Installation
+#### Installation
 TL;DR (**don't run script as sudo, it will not work**)
 ```
 sudo pacman -S git
@@ -45,5 +45,5 @@ Execute script:
 ./install.sh
 ```
 
-## Details
+### Details
 The script currently supports two themes (nord and gruvbox dark).
